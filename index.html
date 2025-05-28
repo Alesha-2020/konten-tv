@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Konten Jadwal TV</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    video, img {
+      width: 100%;
+      height: auto;
+      display: none;
+    }
+    video.active, img.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+<video id="videoPlayer" autoplay muted loop></video>
+<img id="imageFallback" src="video/images.png" alt="Fallback Image" />
+
+<script>
+  const videoPlayer = document.getElementById("videoPlayer");
+  const imageFallback = document.getElementById("imageFallback");
+
+  // Jadwal video per hari (Senin - Jumat)
+  const schedule = {
+    1: { video: "video/k1.mp4" }, // Senin
+    2: { video: "video/k1.mp4" }, // Selasa
+    3: { video: "video/k1.mp4" }, // Rabu
+    4: { video: "video/k1.mp4" }, // Kamis
+    5: { video: "video/k1.mp4" }, // Jumat
+  };
+
+  function isInTimeRange(hour, minute, startHour, startMinute, endHour, endMinute) {
+    const nowTotal = hour * 60 + minute;
+    const startTotal = startHour * 60 + startMinute;
+    const endTotal = endHour * 60 + endMinute;
+    return nowTotal >= startTotal && nowTotal < endTotal;
+  }
+
+  function checkSchedule() {
+    const now = new Date();
+    const hour = now.getHours();
+    const minute = now.getMinutes();
+    const day = now.getDay(); // 0 = Minggu, 1 = Senin, ..., 6 = Sabtu
+
+    const todaySchedule = schedule[day];
+
+    // Cek apakah hari Senin-Jumat dan waktu dalam rentang jam tayang
+    const inFirstRange = isInTimeRange(hour, minute, 12, 0, 12, 30);   // 12:00 - 12:30
+    const inSecondRange = isInTimeRange(hour, minute, 16, 0, 16, 34);  // 16:00 - 16:34
+
+    if (todaySchedule && (inFirstRange || inSecondRange)) {
+      if (videoPlayer.src.indexOf(todaySchedule.video) === -1) {
+        videoPlayer.src = todaySchedule.video;
+        console.log("Memutar video:", todaySchedule.video);
+      }
+      videoPlayer.classList.add('active');
+      imageFallback.classList.remove('active');
+    } else {
+      videoPlayer.classList.remove('active');
+      imageFallback.classList.add('active');
+      console.log("Tidak ada jadwal, tampilkan gambar fallback");
+    }
+  }
+
+  // Jalankan pertama kali saat halaman dimuat
+  checkSchedule();
+
+  // Periksa jadwal setiap 10 detik (10000 ms)
+  setInterval(checkSchedule, 10000);
+
+</script>
+
+</body>
+</html>
