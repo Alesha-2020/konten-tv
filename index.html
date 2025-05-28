@@ -33,11 +33,11 @@
 
   // Jadwal video per hari (Senin - Jumat)
   const schedule = {
-    1: { video: "video/k1.mp4" }, // Senin
-    2: { video: "video/k1.mp4" }, // Selasa
-    3: { video: "video/k1.mp4" }, // Rabu
-    4: { video: "video/k1.mp4" }, // Kamis
-    5: { video: "video/k1.mp4" }, // Jumat
+    1: { video: "video/k3.mp4" }, // Senin
+    2: { video: "video/k3.mp4" }, // Selasa
+    3: { video: "video/k3.mp4" }, // Rabu
+    4: { video: "video/k3.mp4" }, // Kamis
+    5: { video: "video/k3.mp4" }, // Jumat
   };
 
   function isInTimeRange(hour, minute, startHour, startMinute, endHour, endMinute) {
@@ -57,7 +57,7 @@
 
     // Cek apakah hari Senin-Jumat dan waktu dalam rentang jam tayang
     const inFirstRange = isInTimeRange(hour, minute, 12, 0, 12, 30);   // 12:00 - 12:30
-    const inSecondRange = isInTimeRange(hour, minute, 16, 0, 16, 34);  // 16:00 - 16:34
+    const inSecondRange = isInTimeRange(hour, minute, 16, 0, 16, 55);  // 16:00 - 16:55
 
     if (todaySchedule && (inFirstRange || inSecondRange)) {
       if (videoPlayer.src.indexOf(todaySchedule.video) === -1) {
