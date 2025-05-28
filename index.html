@@ -31,14 +31,8 @@
   const videoPlayer = document.getElementById("videoPlayer");
   const imageFallback = document.getElementById("imageFallback");
 
-  // Jadwal video per hari (Senin - Jumat)
-  const schedule = {
-    1: { video: "video/k3.mp4" }, // Senin
-    2: { video: "video/k3.mp4" }, // Selasa
-    3: { video: "video/k3.mp4" }, // Rabu
-    4: { video: "video/k3.mp4" }, // Kamis
-    5: { video: "video/k3.mp4" }, // Jumat
-  };
+  // Video K3 yang akan ditayangkan
+  const k3Video = "video/k3.mp4";
 
   function isInTimeRange(hour, minute, startHour, startMinute, endHour, endMinute) {
     const nowTotal = hour * 60 + minute;
@@ -53,16 +47,17 @@
     const minute = now.getMinutes();
     const day = now.getDay(); // 0 = Minggu, 1 = Senin, ..., 6 = Sabtu
 
-    const todaySchedule = schedule[day];
+    // Hanya Senin–Jumat
+    const isWeekday = day >= 1 && day <= 5;
 
-    // Cek apakah hari Senin-Jumat dan waktu dalam rentang jam tayang
+    // Cek apakah dalam salah satu rentang waktu
     const inFirstRange = isInTimeRange(hour, minute, 12, 0, 12, 30);   // 12:00 - 12:30
-    const inSecondRange = isInTimeRange(hour, minute, 16, 0, 16, 55);  // 16:00 - 16:55
+    const inSecondRange = isInTimeRange(hour, minute, 16, 0, 16, 54);  // 16:00 - 16:54
 
-    if (todaySchedule && (inFirstRange || inSecondRange)) {
-      if (videoPlayer.src.indexOf(todaySchedule.video) === -1) {
-        videoPlayer.src = todaySchedule.video;
-        console.log("Memutar video:", todaySchedule.video);
+    if (isWeekday && (inFirstRange || inSecondRange)) {
+      if (!videoPlayer.src.includes(k3Video)) {
+        videoPlayer.src = k3Video;
+        console.log("Memutar video:", k3Video);
       }
       videoPlayer.classList.add('active');
       imageFallback.classList.remove('active');
@@ -73,12 +68,11 @@
     }
   }
 
-  // Jalankan pertama kali saat halaman dimuat
+  // Jalankan saat halaman dimuat
   checkSchedule();
 
-  // Periksa jadwal setiap 10 detik (10000 ms)
+  // Periksa ulang setiap 10 detik
   setInterval(checkSchedule, 10000);
-
 </script>
 
 </body>
